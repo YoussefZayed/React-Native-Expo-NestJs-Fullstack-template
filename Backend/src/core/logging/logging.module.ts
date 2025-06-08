@@ -30,8 +30,8 @@ import { Env } from '../config/env';
                             paths: ['req.headers.authorization', 'req.headers.cookie'],
                             censor: '**REDACTED**',
                         },
-                        customSuccessMessage: (req, res) =>
-                            `request completed in ${(res as any).elapsed}ms`,
+                        customSuccessMessage: (req, res, responseTime) =>
+                            `request completed in ${responseTime}ms`,
                         quietReqLogger: true,
                         customSuccessObject: (req, res, log) => {
                             const isHealthCheck = (req.url ?? '').includes('/health');
