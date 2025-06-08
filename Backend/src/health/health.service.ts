@@ -16,6 +16,7 @@ export class HealthService {
         const result: { createdAt: Date } =
             await this.healthRepository.createHealthRecord();
         this.logger.info('Health check successful.');
+        this.logger.debug('DEBUG: Health check successful.');
 
         return {
             status: 'ok',
