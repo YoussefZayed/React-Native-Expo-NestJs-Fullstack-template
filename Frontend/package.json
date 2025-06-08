@@ -7,7 +7,8 @@
     "dev": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "web:only": "expo start --web --no-dev"
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@babel/runtime": "^7.27.6",
     "@types/react": "~19.0.10",
     "babel-plugin-module-resolver": "^5.0.2",
     "tailwindcss": "^3.4.17",

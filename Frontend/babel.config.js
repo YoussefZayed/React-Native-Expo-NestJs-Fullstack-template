@@ -12,6 +12,13 @@ module.exports = function (api) {
                     alias: {
                         '@contract': '../Backend/src/contracts',
                     },
+                    extensions: [
+                        '.js',
+                        '.jsx',
+                        '.ts',
+                        '.tsx',
+                        '.json'
+                    ],
                 },
             ],
             ['module:react-native-dotenv', {
