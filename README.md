@@ -83,14 +83,18 @@ Frontend/
 cd Frontend
 ```
 
-#### 2. Create Your Environment File
-Create a `.env` file by copying the example.
+#### 2. Create Your Environment File (Optional)
+This template automatically uses the correct local URLs for development (`localhost` for web, `10.0.2.2` for native).
+
+You only need a `.env` file in two cases:
+1.  **For Production:** To set your production `API_URL`.
+2.  **For Development:** To override the default local URLs with a specific `DEV_API_URL` (e.g., for testing against a staging server).
+
+To create it, copy the example:
 ```bash
 cp .env.example .env
 ```
-Update `.env` with the correct URL for your backend.
-*   **For Web & iOS Simulator:** `API_URL=http://localhost:3000`
-*   **For Android Emulator:** `API_URL=http://10.0.2.2:3000`
+Update `.env` with either your production `API_URL` or a development `DEV_API_URL`.
 
 #### 3. Install Dependencies
 This project uses `pnpm`. You also need to install the module resolver for the path aliases to work.
@@ -104,7 +108,7 @@ Make sure your backend server is running first!
 ```bash
 pnpm start
 ```
-This starts the Metro bundler. You can then open the app on an Android emulator, iOS simulator, or in your web browser.
+This starts the Metro bundler. The app will automatically connect to your local backend.
 
 ---
 
