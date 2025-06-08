@@ -108,4 +108,94 @@ The `App.tsx` file demonstrates all the integrated libraries working together:
 
 ## Backend
 
-(Backend details to be added)
+The backend is a robust and scalable application built with [NestJS](https://nestjs.com/) and TypeScript. It follows a modern, type-safe architecture designed for maintainability and performance.
+
+### Core Technologies
+
+| Technology | Description |
+| :--- | :--- |
+| **NestJS** | A progressive Node.js framework for building efficient, reliable, and scalable server-side applications. |
+| **TypeScript** | A typed superset of JavaScript that enhances code quality and maintainability. |
+| **PNPM** | A fast, disk space-efficient package manager. |
+
+### Included Libraries & Features
+
+#### Type-Safe API Contracts: ts-rest
+*   **Library:** [ts-rest](https://ts-rest.com/)
+*   **Description:** Enables the creation of end-to-end type-safe APIs. We define a single "contract" for each module, which is then shared between the frontend and backend, ensuring that requests and responses always match the defined schema. This eliminates a common source of bugs in full-stack development.
+
+#### Database ORM & Query Builder
+*   **Prisma:** Used only for database schema migrations. It simplifies database schema management and ensures that our database schema is always in sync with our code. It is not used for runtime queries.
+*   **Kysely:** A type-safe SQL query builder for TypeScript. It's used for all runtime database queries, connecting directly to the PostgreSQL database. This provides a fully type-safe way to interact with the database, catching errors at compile time instead of runtime.
+
+#### Validation: Zod
+*   **Library:** [Zod](https://zod.dev/)
+*   **Description:** A TypeScript-first schema declaration and validation library. It is used in two key places:
+    1.  **Environment Variables:** Ensures that the application starts only when all required environment variables are present and correctly formatted.
+    2.  **API Contracts:** Defines the shape of API request bodies, query parameters, and responses within `ts-rest`, providing automatic validation.
+
+#### Logging: nestjs-pino
+*   **Library:** [nestjs-pino](https://github.com/iamolegga/nestjs-pino)
+*   **Description:** Provides structured, high-performance logging based on the popular Pino logger. It automatically logs incoming requests, responses, and unhandled exceptions.
+
+#### API Documentation: Swagger (OpenAPI)
+*   **Library:** [@nestjs/swagger](https://docs.nestjs.com/openapi/introduction)
+*   **Description:** Automatically generates interactive API documentation from the NestJS controllers. This makes it easy to explore and test the API endpoints.
+
+### Project Structure
+
+The `Backend` directory is structured around modules, with each module following a clear architectural pattern:
+
+```
+Backend/
+├── prisma/
+│   └── schema.prisma # Prisma schema for database models
+├── src/
+│   ├── main.ts       # Application entry point
+│   ├── app.module.ts # Root application module
+│   ├── health/       # Example module
+│   │   ├── health.contract.ts # ts-rest API contract
+│   │   ├── health.controller.ts # Controller implementing the contract
+│   │   ├── health.service.ts    # Business logic
+│   │   ├── health.repository.ts # Database interaction layer (Kysely)
+│   │   └── health.module.ts     # Module definition
+│   └── ...           # Other modules
+├── .env.example      # Example environment variables file
+└── tsconfig.json     # TypeScript configuration
+```
+The flow for a request is: `Contract` -> `Controller` -> `Service` -> `Repository`.
+
+### Getting Started
+
+#### 1. Navigate to the Backend Directory
+```bash
+cd Backend
+```
+
+#### 2. Create Your Environment File
+Create a `.env` file in the `Backend` directory by copying the example.
+```bash
+cp .env.example .env
+```
+You will need to add a `DATABASE_URL` for your PostgreSQL database.
+```
+DATABASE_URL="postgresql://user:password@localhost:5432/mydatabase"
+```
+
+#### 3. Install Dependencies
+This project uses `pnpm`. Install all dependencies with:
+```bash
+pnpm install
+```
+
+#### 4. Run Database Migrations
+Use Prisma to apply the database schema.
+```bash
+pnpm prisma migrate dev
+```
+
+#### 5. Start the Application
+```bash
+pnpm run start:dev
+```
+The backend server will start on `http://localhost:3000`. You can access the Swagger API documentation at `http://localhost:3000/api`.
