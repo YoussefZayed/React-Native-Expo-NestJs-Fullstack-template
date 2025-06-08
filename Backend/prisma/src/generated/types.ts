@@ -8,6 +8,13 @@ export type health = {
     id: Generated<number>;
     createdAt: Generated<Timestamp>;
 };
+export type user = {
+    id: Generated<number>;
+    createdAt: Generated<Timestamp>;
+    username: string;
+    password: string;
+};
 export type DB = {
     health: health;
+    user: user;
 };

@@ -1,19 +1,17 @@
 import { create } from 'zustand';
 
-interface User {
-    name: string;
-}
-
 interface UserState {
-    user: User | null;
-    setUser: (user: User) => void;
+    username: string | null;
+    accessToken: string | null;
+    login: (username: string, accessToken: string) => void;
     logout: () => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
-    user: null,
-    setUser: (user) => set({ user }),
-    logout: () => set({ user: null }),
+    username: null,
+    accessToken: null,
+    login: (username, accessToken) => set({ username, accessToken }),
+    logout: () => set({ username: null, accessToken: null }),
 }));
 
 export default useUserStore; 

@@ -137,6 +137,7 @@ The backend is a robust and scalable application built with [NestJS](https://nes
 #### Database (Prisma & Kysely)
 *   **Prisma:** Used for its powerful schema migration capabilities.
 *   **Kysely:** A type-safe SQL query builder used for all runtime database queries.
+*   **Convention:** All Prisma model names must be in `lowercase_snake_case` (e.g., `user`, `blog_post`). This convention is important for consistency.
 
 #### Validation: Zod
 *   **Library:** [Zod](https://zod.dev/)

@@ -2,6 +2,9 @@ import { initQueryClient } from '@ts-rest/react-query';
 import { contract } from '@contract';
 import { Platform } from 'react-native';
 import { API_URL, DEV_API_URL } from '@env';
+import useUserStore from '../store/user-store';
+import axios from 'axios';
+import { ClientInferRequest, ClientInferResponseBody } from '@ts-rest/core';
 
 export const getBaseUrl = () => {
     // In development, we prioritize the DEV_API_URL from the .env file.
@@ -25,7 +28,51 @@ export const getBaseUrl = () => {
     return API_URL;
 };
 
+const axiosInstance = axios.create();
+
+axiosInstance.interceptors.request.use((config) => {
+    const { accessToken } = useUserStore.getState();
+    if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+});
+
+const fetcher = async (
+    input: RequestInfo | URL,
+    init?: RequestInit,
+): Promise<{
+    status: number;
+    body: any;
+    headers: Headers;
+}> => {
+    try {
+        const result = await axiosInstance.request({
+            url: input.toString(),
+            method: init?.method,
+            data: init?.body,
+            headers: init?.headers as any,
+        });
+
+        return {
+            status: result.status,
+            body: result.data,
+            headers: result.headers as any,
+        };
+    } catch (e) {
+        if (axios.isAxiosError(e) && e.response) {
+            return {
+                status: e.response.status,
+                body: e.response.data,
+                headers: e.response.headers as any,
+            };
+        }
+        throw e;
+    }
+};
+
 export const client = initQueryClient(contract, {
     baseUrl: getBaseUrl(),
     baseHeaders: {},
+    fetcher: fetcher,
 }); 

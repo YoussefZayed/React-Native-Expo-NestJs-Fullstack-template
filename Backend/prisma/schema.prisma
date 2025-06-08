@@ -16,6 +16,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// NOTE: All model names should be in lowercase_snake_case (e.g., user, blog_post).
+model user {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  username  String   @unique
+  password  String
+}
+
 model health {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
