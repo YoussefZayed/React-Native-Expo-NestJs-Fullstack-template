@@ -1,7 +1,11 @@
 import { Controller } from '@nestjs/common';
-import { TsRest, tsRestHandler, TsRestHandler } from '@ts-rest/nest';
-import { healthContract } from './health.contract';
+import { TsRestHandler, tsRestHandler } from '@ts-rest/nest';
+import { healthRoutes } from './health.contract';
 import { HealthService } from './health.service';
+import { initContract } from '@ts-rest/core';
+
+const c = initContract();
+const healthContract = c.router(healthRoutes);
 
 @Controller()
 export class HealthController {

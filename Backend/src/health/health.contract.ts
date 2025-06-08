@@ -1,9 +1,6 @@
-import { initContract } from '@ts-rest/core';
 import { z } from 'zod';
 
-const c = initContract();
-
-export const healthContract = c.router({
+export const healthRoutes = {
     healthCheck: {
         method: 'GET',
         path: '/health',
@@ -15,4 +12,4 @@ export const healthContract = c.router({
         },
         summary: 'Performs a health check',
     },
-}); 
+} as const; 

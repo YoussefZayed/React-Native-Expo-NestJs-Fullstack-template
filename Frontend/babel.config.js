@@ -6,6 +6,14 @@ module.exports = function (api) {
             "nativewind/babel",
         ],
         plugins: [
+            [
+                'module-resolver',
+                {
+                    alias: {
+                        '@contract': '../Backend/src/contracts',
+                    },
+                },
+            ],
             ['module:react-native-dotenv', {
                 "moduleName": "@env",
                 "path": ".env",

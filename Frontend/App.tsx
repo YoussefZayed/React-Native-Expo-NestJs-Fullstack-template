@@ -3,13 +3,15 @@ import { StatusBar } from 'expo-status-bar';
 import { Text, View, Pressable } from 'react-native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './src/lib/react-query';
-import { useExampleQuery } from './src/api';
+import { useHealthCheckQuery } from './src/api';
 import useUserStore from './src/store/user-store';
 import { API_URL } from '@env';
 
 function Main() {
-  const { data, isLoading, error, refetch } = useExampleQuery();
+  const { data, isLoading, error, refetch } = useHealthCheckQuery();
   const { user, setUser, logout } = useUserStore();
+
+  console.log(error);
 
   return (
     <View className="flex-1 items-center justify-center bg-gray-100">
@@ -20,8 +22,8 @@ function Main() {
       <View className="p-4 border border-gray-300 rounded-lg mb-4 w-11/12">
         <Text className="text-lg font-semibold">API State:</Text>
         {isLoading && <Text>Loading...</Text>}
-        {error && <Text>Error: {error.message}</Text>}
-        {data && <Text>Data: {JSON.stringify(data)}</Text>}
+        {error && <Text>Error: {JSON.stringify(error.body)}</Text>}
+        {data && <Text>Data: {JSON.stringify(data.body)}</Text>}
       </View>
 
       <Pressable onPress={() => refetch()} className="bg-blue-500 p-2 rounded-md mb-4">
