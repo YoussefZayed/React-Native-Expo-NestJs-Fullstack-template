@@ -49,6 +49,16 @@ The frontend is a modern, robust, and scalable mobile application built with Exp
 *   **Library:** [NativeWind v4](https://www.nativewind.dev/)
 *   **Description:** Allows you to use [Tailwind CSS](https://tailwindcss.com/) utility classes directly in your React Native components for fast and consistent styling.
 
+#### Authentication Flow & Session Persistence
+*   **Libraries:** [Zustand](https://github.com/pmndrs/zustand), [@react-native-async-storage/async-storage](https://react-native-async-storage.github.io/async-storage/)
+*   **Description:** The template includes a complete authentication flow.
+    1.  On startup, the app attempts to load a JWT from `AsyncStorage`.
+    2.  If a token is found, the `useMeQuery` hook makes a request to the backend's `/auth/me` endpoint to validate the token and fetch user data.
+    3.  During this check, a loading screen is displayed.
+    4.  If successful, the user data and token are saved to a global Zustand store (`user-store.ts`), and the user is taken directly to the main application, bypassing the login screen.
+    5.  If the token is invalid or not present, the user is directed to the `Auth` screen to log in or register.
+    6.  Upon successful login, the new JWT is saved to both `AsyncStorage` and the Zustand store.
+
 #### State Management: Zustand
 *   **Library:** [Zustand](https://github.com/pmndrs/zustand)
 *   **Description:** A small, fast, and scalable state-management solution for managing global app state. A sample `user-store.ts` is provided.
@@ -130,9 +140,16 @@ The backend is a robust and scalable application built with [NestJS](https://nes
 *   **Library:** [ts-rest](https://ts-rest.com/)
 *   **Description:** The cornerstone of the template's type safety. Instead of using decorators to define routes, we define them in a plain TypeScript object called a "contract."
 *   **Implementation:**
-    1.  Each module defines its routes in a `*.contract.ts` file (e.g., `health.contract.ts`). This file exports a simple `const` object.
+    1.  Each module defines its routes in a `*.contract.ts` file (e.g., `health.contract.ts`, `auth.contract.ts`). This file exports a simple `const` object.
     2.  A central contract in `src/contracts/index.ts` imports all module routes and assembles them into a single master `contract` that is shared with the frontend.
     3.  Controllers use the `@ts-rest/nest` library to implement the contract, ensuring the implementation always matches the definition.
+
+#### Authentication: JWT with Passport
+*   **Libraries:** [@nestjs/jwt](https://github.com/nestjs/jwt), [@nestjs/passport](https://github.com/nestjs/passport), [passport-jwt](https://github.com/mikenicholson/passport-jwt)
+*   **Description:** The backend uses a standard JWT-based authentication strategy.
+    *   The `/auth/login` endpoint returns a signed JWT upon successful authentication.
+    *   The `/auth/me` endpoint is a protected route that uses the `JwtAuthGuard` to validate the incoming JWT from the `Authorization: Bearer <token>` header and returns the corresponding user's information.
+    *   The `JWT_SECRET` used for signing tokens must be configured in your `.env` file.
 
 #### Database (Prisma & Kysely)
 *   **Prisma:** Used for its powerful schema migration capabilities.
@@ -150,9 +167,10 @@ The structure is designed for scalability, with the contract at its core.
 ```
 Backend/
 ├── src/
+│   ├── auth/             # Authentication module (JWT strategy, controller)
 │   ├── contracts/
 │   │   └── index.ts        # The master API contract, shared with the frontend
-│   ├── main.ts           # Application entry point (CORS enabled)
+│   ├── main.ts           # Application entry point (CORS & Swagger enabled)
 │   ├── app.module.ts     # Root application module
 │   └── health/           # Example module
 │       ├── health.contract.ts # Defines the routes for this module
@@ -173,9 +191,10 @@ cd Backend
 ```bash
 cp .env.example .env
 ```
-You will need to add a `DATABASE_URL` for your PostgreSQL database.
+You will need to add a `DATABASE_URL` for your PostgreSQL database. You also need a secret for signing JWTs.
 ```
 DATABASE_URL="postgresql://user:password@localhost:5432/mydatabase"
+JWT_SECRET="your-super-secret-key-that-is-long-and-random"
 ```
 
 #### 3. Install Dependencies
