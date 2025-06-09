@@ -5,34 +5,44 @@ import { Logger } from 'nestjs-pino';
 import { ConfigService } from '@nestjs/config';
 import { Env } from './core/config/env';
 import { INestApplication } from '@nestjs/common';
-// import { healthContract } from './health/health.contract';
-// import { generateOpenApi } from '@ts-rest/open-api';
+import { contract } from './contracts';
+import { generateOpenApi } from '@ts-rest/open-api';
 
 function setupSwagger(app: INestApplication): void {
-  // For ideal Swagger documentation with ts-rest, install '@ts-rest/open-api'
-  // and uncomment the lines above and the replacement for this function body.
-  // pnpm add @ts-rest/open-api
-  /*
   const openApiDocument = generateOpenApi(
-    healthContract,
+    contract,
     {
       info: {
         title: 'API',
         version: '1.0.0',
       },
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
     },
     { setOperationId: true },
   );
+
+  // Manually filter out the 'authorization' header parameter from the /auth/me endpoint
+  const path = openApiDocument.paths['/auth/me'];
+  if (path && 'get' in path && path.get.parameters) {
+    path.get.parameters = path.get.parameters.filter(
+      (p) => !('name' in p && p.name === 'authorization'),
+    );
+  }
+
   SwaggerModule.setup('api', app, openApiDocument);
-  */
-
-  const config = new DocumentBuilder()
-    .setTitle('API')
-    .setVersion('1.0.0')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-
-  SwaggerModule.setup('api', app, document);
 }
 
 

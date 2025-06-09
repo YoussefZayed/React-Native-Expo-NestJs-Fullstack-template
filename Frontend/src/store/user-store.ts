@@ -1,17 +1,22 @@
 import { create } from 'zustand';
+import { contract } from '@contract';
+import { ClientInferResponseBody } from '@ts-rest/core';
+
+
+type User = ClientInferResponseBody<typeof contract.me, 200>;
 
 interface UserState {
-    username: string | null;
+    user: User | null;
     accessToken: string | null;
-    login: (username: string, accessToken: string) => void;
+    login: (user: User, accessToken: string) => void;
     logout: () => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
-    username: null,
+    user: null,
     accessToken: null,
-    login: (username, accessToken) => set({ username, accessToken }),
-    logout: () => set({ username: null, accessToken: null }),
+    login: (user, accessToken) => set({ user, accessToken }),
+    logout: () => set({ user: null, accessToken: null }),
 }));
 
 export default useUserStore; 

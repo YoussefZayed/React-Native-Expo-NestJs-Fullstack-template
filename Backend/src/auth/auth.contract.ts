@@ -9,6 +9,11 @@ const UserSchema = z.object({
     createdAt: z.date(),
 });
 
+const UserWithTokenSchema = z.object({
+    accessToken: z.string(),
+    user: UserSchema,
+});
+
 export const authContract = c.router({
     register: {
         method: 'POST',
@@ -30,10 +35,19 @@ export const authContract = c.router({
             password: z.string(),
         }),
         responses: {
-            200: z.object({
-                accessToken: z.string(),
-            }),
+            200: UserWithTokenSchema,
         },
         summary: 'Login a user',
+    },
+    me: {
+        method: 'GET',
+        path: '/auth/me',
+        responses: {
+            200: UserSchema,
+        },
+        headers: z.object({
+            authorization: z.string(),
+        }),
+        summary: 'Get user info from access token',
     },
 }); 

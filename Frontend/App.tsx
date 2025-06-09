@@ -7,6 +7,7 @@ import {
   useHealthCheckQuery,
   useLoginMutation,
   useRegisterMutation,
+  useMeQuery,
 } from './src/api';
 import useUserStore from './src/store/user-store';
 import { getBaseUrl } from './src/lib/ts-rest';
@@ -28,7 +29,7 @@ function Auth() {
       });
 
       if (result.status === 200) {
-        login(username, result.body.accessToken);
+        login(result.body.user, result.body.accessToken);
       } else {
         // You can use a toast or an alert to show the error
         console.error(result.body);
@@ -92,12 +93,14 @@ function Auth() {
 
 function Main() {
   const { data, isLoading, error, refetch } = useHealthCheckQuery();
-  const { username, logout } = useUserStore();
+  const { user, logout } = useUserStore();
   const baseUrl = getBaseUrl();
 
   return (
     <View className="flex-1 items-center justify-center bg-gray-100">
-      <Text className="text-2xl font-bold mb-4">Welcome, {username}!</Text>
+      <Text className="text-2xl font-bold mb-4">
+        Welcome, {user?.username}!
+      </Text>
 
       <Text className="text-lg mb-2">API URL: {baseUrl || 'Not set'}</Text>
 
@@ -125,9 +128,9 @@ function Main() {
 }
 
 function AppContent() {
-  const { accessToken } = useUserStore();
+  const { user } = useUserStore();
 
-  if (accessToken) {
+  if (user) {
     return <Main />;
   }
 

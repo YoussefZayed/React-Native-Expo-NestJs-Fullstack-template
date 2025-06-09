@@ -25,4 +25,12 @@ export class UserRepository {
             .where('username', '=', username)
             .executeTakeFirst();
     }
+
+    async findById(id: number) {
+        return await this.db
+            .selectFrom('user')
+            .selectAll()
+            .where('id', '=', id)
+            .executeTakeFirst();
+    }
 } 

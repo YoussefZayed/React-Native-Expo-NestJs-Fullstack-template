@@ -12,4 +12,8 @@ export class UserService {
     async findByUsername(username: string) {
         return this.userRepository.findByUsername(username);
     }
+
+    async findById(id: number) {
+        return this.userRepository.findById(id);
+    }
 } 

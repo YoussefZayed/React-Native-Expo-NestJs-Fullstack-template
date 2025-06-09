@@ -25,8 +25,11 @@ export class AuthService {
         const user = await this.userService.findByUsername(loginDto.username);
         if (user && (await bcrypt.compare(loginDto.password, user.password))) {
             const payload = { username: user.username, sub: user.id };
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password, ...userResult } = user;
             return {
                 accessToken: this.jwtService.sign(payload),
+                user: userResult,
             };
         }
         throw new UnauthorizedException('Invalid credentials');
